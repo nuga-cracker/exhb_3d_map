@@ -11,13 +11,16 @@ button{font:inherit;font-size:14px;padding:8px 14px;border:1px solid #B4B2A9;bac
 button:hover{background:#F1EFE8}
 button.play{background:#E8593C;color:#fff;border-color:#E8593C}
 button.save{background:#2C2C2A;color:#fff;border-color:#2C2C2A}
-#ctl{position:absolute;right:14px;bottom:14px;display:flex;gap:6px;z-index:2;background:rgba(255,255,255,.85);padding:6px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+#zm{position:absolute;right:14px;top:14px;display:flex;flex-direction:column;gap:6px;z-index:2}
+#zm button{width:44px;height:44px;padding:0;font-size:22px;border-radius:10px;background:rgba(255,255,255,.92);box-shadow:0 2px 8px rgba(0,0,0,.12)}
+#ctl{position:absolute;right:14px;bottom:14px;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px;z-index:2;background:rgba(255,255,255,.85);padding:6px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.12)}
 #wrap{position:relative;width:100%;height:72vh;min-height:420px;border-radius:12px;overflow:hidden;background:#fff;touch-action:none;cursor:grab}
 .lg{display:flex;flex-wrap:wrap;gap:14px;margin-top:10px;font-size:13px;color:#5F5E5A}
 .sw{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px;margin-right:5px;border:1px solid rgba(0,0,0,.12)}
+@media (max-width:640px){.wrap{padding:12px}h1{font-size:16px}p.sub{font-size:12px}.bar{gap:6px}button{font-size:12px;padding:7px 10px}#wrap{height:68vh;min-height:360px}#ctl{right:8px;bottom:8px;max-width:75%}#zm{right:8px;top:8px}#zm button{width:40px;height:40px}.lg{font-size:11px;gap:10px}}
 </style></head><body><div class="wrap">
 <h1>니트베이커리 전시 3D 평면도 — 최종 배치 "빵집 한 바퀴"</h1>
-<p class="sub">1 입구 → 카운터(이벤트 종이·안내·가챠, 옆 진 전시) · 2 오른쪽 홀 위쪽부터 · 3 진열대 위→아래 · 4 나에게 편지(라랏) · 5 제빵사의 방(화덕 사진·늘보 → 클레이 미션·빵 받기) → 출구<br>드래그로 회전, 휠로 확대 · 외관은 「외관(정면)」 버튼으로 보고, 실내 시점에서는 자동으로 꺼집니다</p>
+<p class="sub">1 입구 → 카운터(이벤트 종이·안내·가챠, 옆 진 전시) · 2 오른쪽 홀 위쪽부터 · 3 진열대 위→아래 · 4 나에게 편지(라랏) · 5 제빵사의 방(화덕 사진·늘보 → 클레이 미션·빵 받기) → 출구<br>한 손가락(드래그): 회전 · 두 손가락: 확대/축소·이동 · PC는 휠 확대, 오른쪽 드래그·Shift+드래그로 이동 · 외관은 「외관(정면)」 버튼으로 보고, 실내 시점에서는 자동으로 꺼집니다</p>
 <div class="bar">
 <button onclick="setView('outside')">외관(정면)</button>
 <button id="fc" onclick="toggleFacade()">외관 켜기</button>
@@ -33,7 +36,7 @@ button.save{background:#2C2C2A;color:#fff;border-color:#2C2C2A}
 <button id="lb" onclick="toggleLabels()">이름표 숨기기</button>
 <button class="save" onclick="savePng()">현재 화면 PNG 저장</button>
 </div>
-<div id="wrap"><div id="ctl" onpointerdown="event.stopPropagation()" onwheel="event.stopPropagation()">
+<div id="wrap"><div id="zm" onpointerdown="event.stopPropagation()" onwheel="event.stopPropagation()"><button onclick="zoomBy(0.8)" aria-label="확대">＋</button><button onclick="zoomBy(1.25)" aria-label="축소">－</button></div><div id="ctl" onpointerdown="event.stopPropagation()" onwheel="event.stopPropagation()">
 <button id="pb" class="play" onclick="togglePlay()">▶ 관람 동선 재생</button>
 <button id="sp" onclick="cycleSpeed()">속도 1x</button>
 <button onclick="resetWalk()">처음부터</button>
@@ -234,11 +237,18 @@ function toggleFacade(){facade.visible=!facade.visible;fcBtn();}
 function toggleFlow(){flow.visible=!flow.visible;document.getElementById('fb').textContent=flow.visible?'동선 숨기기':'동선 보기';}
 function toggleLabels(){const v=!labels[0].visible;labels.forEach(l=>l.visible=v);document.getElementById('lb').textContent=v?'이름표 숨기기':'이름표 보기';}
 function savePng(){R.render(S,C);const a=document.createElement('a');a.href=R.domElement.toDataURL('image/png');a.download='니트베이커리_3D평면도_최종.png';a.click();}
-let dr=false,lx=0,ly=0;
-W.addEventListener('pointerdown',e=>{dr=true;lx=e.clientX;ly=e.clientY;W.setPointerCapture(e.pointerId);W.style.cursor='grabbing';});
-W.addEventListener('pointerup',()=>{dr=false;W.style.cursor='grab';});
-W.addEventListener('pointermove',e=>{if(!dr)return;th-=(e.clientX-lx)*0.008;ph=Math.min(1.5,Math.max(0.02,ph-(e.clientY-ly)*0.006));lx=e.clientX;ly=e.clientY;upd();});
-W.addEventListener('wheel',e=>{e.preventDefault();rad=Math.min(30,Math.max(2.5,rad*(1+e.deltaY*0.001)));upd();},{passive:false});
+const PT=new Map();let pinchD=0,midX=0,midY=0,panMode=false;
+function zoomBy(f){rad=Math.min(30,Math.max(1.5,rad*f));upd();}
+function panBy(dx,dy){const k=rad*0.0016;const rx=Math.cos(th),rz=-Math.sin(th),fx=-Math.sin(th),fz=-Math.cos(th);tg.x+=-dx*k*rx+dy*k*fx;tg.z+=-dx*k*rz+dy*k*fz;upd();}
+function two(){const p=[...PT.values()];return {d:Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y),x:(p[0].x+p[1].x)/2,y:(p[0].y+p[1].y)/2};}
+W.addEventListener('contextmenu',e=>e.preventDefault());
+W.addEventListener('pointerdown',e=>{W.setPointerCapture(e.pointerId);PT.set(e.pointerId,{x:e.clientX,y:e.clientY});panMode=e.button===2||e.shiftKey;if(PT.size===2){const t=two();pinchD=t.d;midX=t.x;midY=t.y;}W.style.cursor='grabbing';});
+function up(e){PT.delete(e.pointerId);if(PT.size<2)pinchD=0;if(PT.size===1){const p=[...PT.values()][0];p.x0=p.x;}W.style.cursor='grab';}
+W.addEventListener('pointerup',up);W.addEventListener('pointercancel',up);
+W.addEventListener('pointermove',e=>{const p=PT.get(e.pointerId);if(!p)return;const dx=e.clientX-p.x,dy=e.clientY-p.y;p.x=e.clientX;p.y=e.clientY;
+if(PT.size===2){const t=two();if(pinchD>0){zoomBy(pinchD/t.d);panBy(t.x-midX,t.y-midY);}pinchD=t.d;midX=t.x;midY=t.y;return;}
+if(PT.size===1){if(panMode){panBy(dx,dy);return;}th-=dx*0.008;ph=Math.min(1.5,Math.max(0.02,ph-dy*0.006));upd();}});
+W.addEventListener('wheel',e=>{e.preventDefault();zoomBy(1+e.deltaY*0.001);},{passive:false});
 addEventListener('resize',()=>{R.setSize(W.clientWidth,H());C.aspect=W.clientWidth/H();C.updateProjectionMatrix();});
 setView('iso');
 let last=performance.now();
