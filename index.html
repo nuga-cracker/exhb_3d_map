@@ -15,7 +15,7 @@ button.save{background:#2C2C2A;color:#fff;border-color:#2C2C2A}
 .sw{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px;margin-right:5px;border:1px solid rgba(0,0,0,.12)}
 </style></head><body><div class="wrap">
 <h1>니트베이커리 전시 3D 평면도 — 최종 배치 "빵집 한 바퀴"</h1>
-<p class="sub">1 입구 → 카운터(이벤트 종이·안내·가챠, 옆 진 전시) · 2 오른쪽 홀 위쪽부터 · 3 진열대 위→아래 · 4 나에게 편지(라랏) · 5 제빵사의 방(화덕 사진·늘보 → 클레이 미션·빵 받기) → 출구<br>드래그로 회전, 휠로 확대</p>
+<p class="sub">1 입구 → 카운터(이벤트 종이·안내·가챠, 옆 진 전시) · 2 오른쪽 홀 위쪽부터 · 3 진열대 위→아래 · 4 나에게 편지(라랏) · 5 제빵사의 방(화덕 사진·늘보 → 클레이 미션·빵 받기) → 출구<br>드래그로 회전, 휠로 확대 · 외관은 「외관(정면)」 버튼으로 보고, 실내 시점에서는 자동으로 꺼집니다</p>
 <div class="bar">
 <button onclick="setView('iso')">비스듬히</button>
 <button onclick="setView('top')">위에서</button>
@@ -23,6 +23,8 @@ button.save{background:#2C2C2A;color:#fff;border-color:#2C2C2A}
 <button onclick="setView('left')">제빵사의 방</button>
 <button onclick="setView('right')">오른쪽 진열대</button>
 <button onclick="setView('counter')">카운터</button>
+<button onclick="setView('outside')">외관(정면)</button>
+<button id="fc" onclick="toggleFacade()">외관 켜기</button>
 <button id="fb" onclick="toggleFlow()">동선 숨기기</button>
 <button id="lb" onclick="toggleLabels()">이름표 숨기기</button>
 <button class="save" onclick="savePng()">현재 화면 PNG 저장</button>
@@ -89,10 +91,9 @@ function chair(x,z,rot){const g=new THREE.Group();const add=(geo,c,X,Y,Z)=>{cons
 add(new THREE.BoxGeometry(0.42,0.04,0.42),0xC9A46A,0,0.45,0);add(new THREE.BoxGeometry(0.42,0.32,0.03),0xC9A46A,0,0.72,-0.2);
 [-0.2,0.2].forEach(dx=>{add(new THREE.BoxGeometry(0.02,0.45,0.02),0x9a9a9a,dx,0.22,0.18);add(new THREE.BoxGeometry(0.02,0.02,0.42),0x9a9a9a,dx,0.01,0);add(new THREE.BoxGeometry(0.02,0.75,0.02),0x9a9a9a,dx,0.5,-0.21);});
 g.position.set(px(x),0,pz(z));g.rotation.y=rot;S.add(g);}
-box(30,25,840,746,0.05,0xD9D3C7,-0.05);box(250,746,620,830,0.04,0xBDB8AE,-0.04);
+box(30,25,840,746,0.05,0xD9D3C7,-0.05);box(22,746,846,808,0.3,0x9C8466,-0.32);box(130,808,846,840,0.15,0x8A7458,-0.32);box(-80,808,960,1000,0.05,0x7D7E80,-0.37);for(let i=0;i<9;i++)box(22,752+i*6.5,846,753+i*6.5,0.004,0x6E5B45,-0.02);
 const YW=0xF6E39A,NV=0x3C3A8C,GR=0x1F5A48;
 box(30,25,455,235,2.2,0xC9C7C1);label('복도·화장실',240,130,2.45);
-art(455,110,458,225,'경험공유 B3',475,168,1.3);
 box(30,235,265,447,2.2,0xD3D5D2);label('창고',148,340,2.45);
 box(455,25,840,235,0.2,0x7A4A26);label('워크숍 구역(단차)',640,130,0.95);label('별별 13–15시 · 하르딘 15–17시',640,175,0.95,0.75);
 box(570,28,780,70,0.45,0x8a8a8a,0.2);box(792,85,836,215,0.45,0x8a8a8a,0.2);
@@ -104,8 +105,8 @@ box(275,394,298,416,0.42,0xD4537E,1.05);const dome=new THREE.Mesh(new THREE.Sphe
 [[0xFAC775,-0.06],[0xF4C0D1,0.05],[0x97C459,0]].forEach(([c,d],i)=>{const b=new THREE.Mesh(new THREE.SphereGeometry(0.055,12,10),Mt(c));b.position.set(px(286.5)+d,1.55+i*0.04,pz(405)+d*0.5);S.add(b);});
 label('가챠',286,405,2.0,0.8);
 standing(340,355,0,0x378ADD);
-box(22,447,32,746,2.2,YW);box(30,447,268,455,2.2,YW);box(30,738,268,746,2.2,YW);
-box(838,226,846,746,2.2,YW);box(590,738,846,746,2.2,YW);
+box(22,447,32,746,2.2,YW);box(30,447,268,455,2.2,YW);
+box(838,226,846,746,2.2,YW);box(680,738,846,746,2.2,YW);
 box(32,455,268,498,0.45,NV);box(32,498,78,695,0.45,NV);box(32,695,268,738,0.45,NV);
 box(790,235,838,695,0.45,NV);box(590,695,838,738,0.45,NV);
 [[155,517],[93,601],[155,679],[776,364],[776,527],[690,679],[815,47]].forEach(([x,z])=>{const s=new THREE.Mesh(new THREE.SphereGeometry(0.07,14,10),Mt(0xA32D2D));s.position.set(px(x),z<100?0.75:0.55,pz(z));S.add(s);});
@@ -128,11 +129,39 @@ table(769,466,55,55,'p','하르딘 개인');
 table(769,520,55,70,'c','하르딘 사내');
 table(769,577,55,40,'p','희야');
 table(769,633,55,55,'c','한량');
-art(610,734,790,737,'마무리 벽: 라랏 팀원 엽서',700,722);
+art(695,734,832,737,'마무리 벽: 라랏 팀원 엽서',763,722);
 table(625,674,40,55,'p','라랏 개인');table(672,674,55,55,'x','라랏 편지');seated(672,716,Math.PI,0xE24B4A);chair(672,639,0);
 table(722,674,55,55,'o','편지 자리');
-box(522,792,568,796,1.7,0xFAC775,0.05);box(543,790,547,798,0.05,0x6b6b6b,0);label('엑스배너 (밖)',545,794,2.0,0.8);
+box(522,785,568,789,1.7,0xFAC775,-0.02);box(543,783,547,791,0.05,0x6b6b6b,-0.02);label('엑스배너 (밖)',545,787,1.9,0.8);
 label('입구',430,770,0.55,1);
+
+const facade=new THREE.Group();S.add(facade);facade.visible=false;
+function brickTex(base,mortar,bw,bh){const c=document.createElement('canvas');c.width=c.height=512;const g=c.getContext('2d');g.fillStyle=mortar;g.fillRect(0,0,512,512);const rows=Math.round(1/bh),rh=512/rows,cols=Math.round(1/bw),cw=512/cols;for(let r=0;r<rows;r++)for(let k=-1;k<=cols;k++){const x=k*cw+(r%2?cw/2:0);g.fillStyle=base[Math.abs(r*7+k*3)%base.length];g.fillRect(x+2,r*rh+2,cw-4,rh-4);}const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.anisotropy=4;return t;}
+const FZ=pz(746),FD=0.25;
+function arch(P0,x1,x2,y0,ys,r){P0.moveTo(x1,y0);P0.lineTo(x2,y0);P0.lineTo(x2,ys);P0.quadraticCurveTo((x1+x2)/2,ys+2*r,x1,ys);P0.lineTo(x1,y0);return P0;}
+function fadd(geo,mat,z){const m=new THREE.Mesh(geo,mat);m.position.z=z;m.castShadow=true;m.receiveShadow=true;facade.add(m);return m;}
+function fbox(xa,xb,ya,yb,z,d,col){const m=new THREE.Mesh(new THREE.BoxGeometry(xb-xa,yb-ya,d),Mt(col));m.position.set((xa+xb)/2,(ya+yb)/2,z);m.castShadow=true;facade.add(m);return m;}
+function textPlane(lines,font,col,w,h,x,y,z){const cw=1024,ch=Math.round(cw*h/w);const c=document.createElement('canvas');c.width=cw;c.height=ch;const g=c.getContext('2d');g.fillStyle=col;g.textAlign='center';g.textBaseline='middle';g.font=font;const lh=ch/lines.length;lines.forEach((l,i)=>g.fillText(l,cw/2,lh*(i+0.5)));const t=new THREE.CanvasTexture(c);const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:t,transparent:true}));m.position.set(x,y,z);facade.add(m);}
+const OPN=[{x1:50,x2:250,y0:0.6,ys:2.3,r:0.32,k:'win'},{x1:388,x2:472,y0:0.02,ys:2.35,r:0.26,k:'door'},{x1:600,x2:680,y0:0.95,ys:2.3,r:0.25,k:'win'}].map(o=>Object.assign(o,{X1:px(o.x1),X2:px(o.x2)}));
+const ws=new THREE.Shape();ws.moveTo(px(22),0);ws.lineTo(px(846),0);ws.lineTo(px(846),3.1);ws.lineTo(px(22),3.1);ws.lineTo(px(22),0);
+OPN.forEach(o=>ws.holes.push(arch(new THREE.Path(),o.X1,o.X2,o.y0,o.ys,o.r)));
+fadd(new THREE.ExtrudeGeometry(ws,{depth:FD,bevelEnabled:false}),new THREE.MeshLambertMaterial({map:brickTex(['#F4F2EC','#EEECE6','#F8F6F1'],'#D6D3CB',0.21,0.07)}),FZ);
+const rt=brickTex(['#8E3B2C','#7A3326','#9A4534','#843A2B'],'#5E4E47',0.21,0.07);rt.repeat.set(11.8,0.8);
+const rb=new THREE.Mesh(new THREE.BoxGeometry(px(846)-px(22),0.8,0.32),new THREE.MeshLambertMaterial({map:rt}));rb.position.set((px(846)+px(22))/2,3.5,FZ+0.13);rb.castShadow=true;facade.add(rb);
+const FR=0xE07A4F,GL=new THREE.MeshLambertMaterial({color:0xBFD9E6,transparent:true,opacity:0.32,side:THREE.DoubleSide});
+OPN.forEach(o=>{const t=0.07;const fs=arch(new THREE.Shape(),o.X1,o.X2,o.y0,o.ys,o.r);fs.holes.push(arch(new THREE.Path(),o.X1+t,o.X2-t,o.y0+(o.k==='door'?0.012:t),o.ys,o.r-0.03));
+fadd(new THREE.ExtrudeGeometry(fs,{depth:0.12,bevelEnabled:false}),Mt(FR),FZ+0.1);
+const cv=new THREE.QuadraticBezierCurve3(new THREE.Vector3(o.X1-0.07,o.ys,0),new THREE.Vector3((o.X1+o.X2)/2,o.ys+2*(o.r+0.1),0),new THREE.Vector3(o.X2+0.07,o.ys,0));
+fadd(new THREE.TubeGeometry(cv,40,0.055,8,false),Mt(0xE9E6DE),FZ+0.25);
+if(o.k==='win'){const gm=new THREE.Mesh(new THREE.ShapeGeometry(arch(new THREE.Shape(),o.X1+t,o.X2-t,o.y0+t,o.ys,o.r-0.03)),GL);gm.position.z=FZ+0.15;facade.add(gm);fbox(o.X1-0.04,o.X2+0.04,o.y0-0.05,o.y0,FZ+0.27,0.08,0xE9E6DE);}
+else{const xL=o.X1+t,xR=o.X2-t,mid=(xL+xR)/2;const ts=new THREE.Shape();ts.moveTo(xL,2.2);ts.lineTo(xR,2.2);ts.lineTo(xR,o.ys);ts.quadraticCurveTo(mid,o.ys+2*(o.r-0.03),xL,o.ys);ts.lineTo(xL,2.2);const tm=new THREE.Mesh(new THREE.ShapeGeometry(ts),Mt(0xE8865C));tm.position.z=FZ+0.16;facade.add(tm);
+[[xL,mid],[mid,xR]].forEach(([a,b])=>{const z=FZ+0.16,d=0.05,k=0.07;fbox(a,b,2.2-k,2.2,z,d,FR);fbox(a,b,0.02,0.16,z,d,FR);fbox(a,a+k,0.02,2.2,z,d,FR);fbox(b-k,b,0.02,2.2,z,d,FR);const g=new THREE.Mesh(new THREE.PlaneGeometry(b-a-2*k,2.2-k-0.16),GL);g.position.set((a+b)/2,(2.2-k+0.16)/2,z);facade.add(g);});
+[mid-0.06,mid+0.06].forEach(x=>{const h=new THREE.Mesh(new THREE.CylinderGeometry(0.015,0.015,0.75,8),Mt(0xC8C8C8));h.position.set(x,1.15,FZ+0.21);facade.add(h);});
+const lp=new THREE.Mesh(new THREE.CircleGeometry(0.05,16),new THREE.MeshBasicMaterial({color:0xFFE7A8}));lp.position.set(mid,2.4,FZ+0.17);facade.add(lp);}});
+textPlane(['all we','need is a','place to hide','and a bagel...'],'italic 600 120px Georgia, serif','#F6E9C4',1.9,1.25,px(150),1.5,FZ+0.17);
+textPlane(['hmp'],'italic 700 360px Georgia, serif','#F6E9C4',0.9,0.75,px(640),1.65,FZ+0.17);
+textPlane(['HIDE ME,','PLEASE'],'600 150px Georgia, serif','#F7F3EA',1.25,0.6,px(430),3.5,FZ+0.3);
+fbox(px(26),px(40),0.85,2.3,FZ+0.3,0.05,0xF1DFAE);
 const P=[[430,800],[428,560],[420,468],[540,455],[620,400],[660,310],[700,270],[712,300],[712,460],[712,595],[690,610],[560,605],[420,595],[290,590],[200,622],[140,612],[155,568],[205,548],[255,580],[330,680],[395,800]].map(([x,z])=>new THREE.Vector3(px(x),0.06,pz(z)));
 const cur=new THREE.CatmullRomCurve3(P,false,'catmullrom',0.3);
 flow.add(new THREE.Mesh(new THREE.TubeGeometry(cur,340,0.035,8,false),new THREE.MeshBasicMaterial({color:0xEF9F27})));
@@ -140,7 +169,9 @@ for(let i=1;i<19;i++){const t=i/19,p=cur.getPointAt(t),d=cur.getTangentAt(t);con
 [['1',448,700],['2',640,375],['3',695,470],['4',640,595],['5',330,578]].forEach(([n,x,z])=>{const c=document.createElement('canvas');c.width=c.height=64;const g=c.getContext('2d');g.fillStyle='#E8593C';g.beginPath();g.arc(32,32,30,0,7);g.fill();g.fillStyle='#fff';g.font='600 34px '+FONT;g.textAlign='center';g.textBaseline='middle';g.fillText(n,32,34);const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),depthTest:false}));sp.scale.set(0.32,0.32,1);sp.position.set(px(x),0.45,pz(z));sp.renderOrder=11;flow.add(sp);});
 let th=-0.55,ph=0.88,rad=17,tg=new THREE.Vector3(0,0,0.6);
 function upd(){C.position.set(tg.x+rad*Math.sin(ph)*Math.sin(th),tg.y+rad*Math.cos(ph),tg.z+rad*Math.sin(ph)*Math.cos(th));C.lookAt(tg);}
-function setView(v){if(v==='iso'){th=-0.55;ph=0.88;rad=17;tg.set(0,0,0.6);}if(v==='top'){th=0;ph=0.02;rad=18;tg.set(0,0,0.6);}if(v==='door'){th=0;ph=1.42;rad=4.2;tg.set(px(430),1.25,pz(540));}if(v==='left'){th=0.85;ph=1.15;rad=5.6;tg.set(px(130),1.0,pz(590));}if(v==='right'){th=-1.25;ph=1.15;rad=6.6;tg.set(px(780),1.0,pz(460));}if(v==='counter'){th=0.15;ph=1.2;rad=4.5;tg.set(px(410),1.1,pz(410));}upd();}
+function setView(v){if(v==='iso'){th=-0.55;ph=0.88;rad=17;tg.set(0,0,0.6);}if(v==='top'){th=0;ph=0.02;rad=18;tg.set(0,0,0.6);}if(v==='door'){th=0;ph=1.42;rad=4.2;tg.set(px(430),1.25,pz(540));}if(v==='left'){th=0.85;ph=1.15;rad=5.6;tg.set(px(130),1.0,pz(590));}if(v==='right'){th=-1.25;ph=1.15;rad=6.6;tg.set(px(780),1.0,pz(460));}if(v==='outside'){th=-0.32;ph=1.33;rad=13;tg.set(px(434),1.6,pz(760));}if(v==='counter'){th=0.15;ph=1.2;rad=4.5;tg.set(px(410),1.1,pz(410));}facade.visible=(v==='outside');fcBtn();upd();}
+function fcBtn(){document.getElementById('fc').textContent=facade.visible?'외관 끄기':'외관 켜기';}
+function toggleFacade(){facade.visible=!facade.visible;fcBtn();}
 function toggleFlow(){flow.visible=!flow.visible;document.getElementById('fb').textContent=flow.visible?'동선 숨기기':'동선 보기';}
 function toggleLabels(){const v=!labels[0].visible;labels.forEach(l=>l.visible=v);document.getElementById('lb').textContent=v?'이름표 숨기기':'이름표 보기';}
 function savePng(){R.render(S,C);const a=document.createElement('a');a.href=R.domElement.toDataURL('image/png');a.download='니트베이커리_3D평면도_최종.png';a.click();}
